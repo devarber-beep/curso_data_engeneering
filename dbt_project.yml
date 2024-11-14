@@ -42,5 +42,6 @@ models:
       +materialized: table
 
 # Configuring seeds
-seeds:
-  +database: "ALUMNO6_DEV_BRONZE_DB"#  +schema: "SEEDS"
+#seeds:
+  #+database: "ALUMNO6_DEV_BRONZE_DB"
+  #  +schema: "SEEDS"
