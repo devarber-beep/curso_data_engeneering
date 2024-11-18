@@ -13,10 +13,10 @@ WITH src_users AS (
 renamed_casted AS (
     SELECT
         user_id,
-        updated_at,
+        updated_at, --indicar y pasarlo a utc
         address_id,
         last_name, --dato sensible
-        created_at,
+        created_at, --UTC
         phone_numbre, --dato sensible
         total_orders,
         first_name, --dato sensible

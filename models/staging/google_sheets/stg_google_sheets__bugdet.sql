@@ -20,4 +20,15 @@ renamed_casted AS (
     FROM src_budget
     )
 
-SELECT * FROM renamed_casted
+aggregated_budget AS (
+    SELECT 
+        month,
+        SUM(quantity) AS total_quantity,
+        COUNT(DISTINCT product_id) AS product_id, --referencia entidad productos
+        MAX(date_load) AS date_load
+    FROM renamed_casted
+    GROUP BY month
+)
+
+SELECT * 
+FROM aggregated_budget
