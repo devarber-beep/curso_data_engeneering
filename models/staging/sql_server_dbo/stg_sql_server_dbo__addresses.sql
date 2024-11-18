@@ -3,6 +3,7 @@
     materialized='view'
   )
 }}
+    /*schema="staging"*/
 
 WITH src_addresses AS (
     SELECT * 
@@ -12,14 +13,15 @@ WITH src_addresses AS (
 renamed_casted AS (
     SELECT
           address_id,
-          zipcode, #DatoSensible
+          zipcode, --DatoSensible
           country,
-          address, #DatoSensible
+          address, --DatoSensible
           state,
           _fivetran_deleted,
-          _fivetran_synced
+          _fivetran_synced AS date_load
         ,
     FROM src_addresses
+    WHERE _FIVETRAN_DELETED = FALSE
     )
 
 SELECT * FROM renamed_casted
