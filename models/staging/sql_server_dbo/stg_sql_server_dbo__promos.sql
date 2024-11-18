@@ -12,8 +12,8 @@ WITH src_promos AS (
 
 renamed_casted AS (
     SELECT
-        promo_id, --dato sensible
-        discount,
+        {{ dbt_utils.generate_surrogate_key('PROMO_ID') }}, --dato sensible
+        discount AS discount_in_eu,
         status,
           _fivetran_deleted,
           _fivetran_synced AS date_load

@@ -13,10 +13,10 @@ WITH src_addresses AS (
 renamed_casted AS (
     SELECT
           address_id,
-          zipcode, --DatoSensible
+          {{ dbt_utils.generate_surrogate_key('ZIPCODE') }}, --DatoSensible
           country,
-          address, --DatoSensible
-          state,
+          {{ dbt_utils.generate_surrogate_key('ADDRESS') }}, --DatoSensible
+          state, 
           _fivetran_deleted,
           _fivetran_synced AS date_load
         ,

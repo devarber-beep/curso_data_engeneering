@@ -15,12 +15,12 @@ renamed_casted AS (
         user_id,
         updated_at, --indicar y pasarlo a utc
         address_id,
-        last_name, --dato sensible
+        {{ dbt_utils.generate_surrogate_key('LAST_NAME') }}last_name, --dato sensible
         created_at, --UTC
-        phone_numbre, --dato sensible
+        {{ dbt_utils.generate_surrogate_key('PHONE_NUMBER') }}, --dato sensible
         total_orders,
-        first_name, --dato sensible
-        email, --dato sensible
+        {{ dbt_utils.generate_surrogate_key('FIRST_NAME') }}, --dato sensible
+        {{ dbt_utils.generate_surrogate_key('EMAIL') }}, --dato sensible
           _fivetran_deleted,
           _fivetran_synced AS date_load
         ,

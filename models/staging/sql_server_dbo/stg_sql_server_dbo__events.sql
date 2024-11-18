@@ -13,12 +13,12 @@ WITH src_events AS (
 renamed_casted AS (
     SELECT
         event_id,
-        page_url,
-        event_type, --DatoSensible
+        {{ dbt_utils.generate_surrogate_key('PAGE_URL') }}, -- Dato sensible
+        {{ dbt_utils.generate_surrogate_key('EVENT_TYPE') }}, --DatoSensible + RELATIONSHIP
         user_id, --relationship
         product_id, --relationship
         session_id, --relationship
-        created_at,
+        created_at, --Ponerlo en UTC
         order_id, --relationship
           _fivetran_deleted,
           _fivetran_synced AS date_load

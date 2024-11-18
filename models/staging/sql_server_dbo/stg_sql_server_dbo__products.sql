@@ -14,7 +14,7 @@ renamed_casted AS (
     SELECT
         product_id,
         price,
-        name, -- dato sensible
+        {{ dbt_utils.generate_surrogate_key('NAME') }}, -- dato sensible
         inventory,
           _fivetran_deleted,
           _fivetran_synced AS date_load

@@ -24,7 +24,7 @@ renamed_casted AS (
         user_id, --relationship
         order_total,
         delivery_at,
-        tracking_id, --dato sensible
+        {{ dbt_utils.generate_surrogate_key('TRACKING_ID') }}, --dato sensible
         status,
           _fivetran_deleted,
           _fivetran_synced AS date_load
