@@ -1,0 +1,33 @@
+# Para test y documentación
+
+version: 2
+
+models:
+  - name: aggregated_budget
+    description: >
+      Model summarizing budget data by month, calculating total quantities and unique products.
+columns:
+  - name: month
+    description: >
+      The month of the budget.
+    tests:
+      - not_null
+  - name: total_quantity
+    description: >
+      Total number of product units budgeted per month.
+    tests:
+      - not_null
+      - positive_values
+  - name: product_id
+    description: >
+      Number of unique products budgeted per month.
+    tests:
+      - not_null
+      - accepted_range:
+          min: 1
+  - name: date_load
+    description: >
+      Date of the last synchronization of budget data.
+    tests:
+      - not_null
+
