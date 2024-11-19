@@ -15,6 +15,7 @@ renamed_casted AS (
         order_id, --relationship
         product_id, --relationship
         quantity,
+        {{ dbt_utils.generate_surrogate_key('ORDER_ID, PRODUCT_ID') }},
           _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_order_items 
