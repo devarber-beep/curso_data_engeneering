@@ -17,7 +17,6 @@ renamed_casted AS (
         quantity,
           _fivetran_deleted,
           _fivetran_synced AS date_load
-        ,
     FROM src_order_items 
     WHERE _FIVETRAN_DELETED = FALSE
     )

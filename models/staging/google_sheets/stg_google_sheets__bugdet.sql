@@ -22,7 +22,7 @@ renamed_casted AS (
 
 aggregated_budget AS (
     SELECT 
-        month,
+        month, -- referencia entidad tiempo
         SUM(quantity) AS total_quantity,
         COUNT(DISTINCT product_id) AS product_id, --referencia entidad productos
         MAX(date_load) AS date_load
