@@ -22,13 +22,11 @@ models:
         tests:
           - not_null
           - unique
-        tags: ["primary_key", "event_id"]
 
       - name: page_url
         description: "URL of the page where the event occurred."
         tests:
           - not_null
-        tags: ["url", "event_page"]
 
       - name: event_type
         description: "TType of event (checkout, package_shipped, add_to_cart, page_view)."
@@ -37,30 +35,77 @@ models:
           - accepted_values:
               values:
                 ["checkout", "package_shipped", "add_to_cart", "page_view"]
-        tags: ["event_type"]
 
       - name: user_id
         description: "Identifier for the user who triggered the event."
         tests:
           - not_null
-        tags: ["user", "event_user"]
 
       - name: product_id
         description: "Identifier for the product associated with the event."
-        tags: ["product", "event_product"]
 
       - name: session_id
         description: "Session ID for the user's session during the event."
         tests:
           - not_null
-        tags: ["session", "event_session"]
 
       - name: created_at
         description: "Timestamp when the event occurred."
         tests:
           - not_null
-        tags: ["timestamp", "event_time"]
 
       - name: order_id
         description: "Identifier for the associated order, if any."
-        tags: ["order", "event_order"]
+
+
+  - name: addresses
+    description: |
+      This model contains data address information
+    docs:
+      show: true
+      node_color: "#cd7f32" # Color para el diagrama de la base de datos
+    deprecation_date: "2025-12-31"
+    access: public
+    config:
+      materialized: table # El modelo se materializa como una tabla en la base de datos
+    tests:
+      - not_null
+      - unique
+    columns:
+      - name: address_iid
+        description: "Unique identifier for each address."
+        tests:
+          - not_null
+          - unique
+
+      - name: zipcode
+        description: "Postal code for the address."
+        tests:
+          - not_null
+
+      - name: country
+        description: "Country associated with the address."
+        tests:
+          - not_null
+
+      - name: address
+        description: "Detailed street address."
+        tests:
+          - not_null
+
+      - name: state
+        description: "State or region associated with the address."
+
+      - name: session_id
+        description: "Session ID for the user's session during the event."
+        tests:
+          - not_null
+
+      - name: _fivetran_deleted
+        description: "Flag indicating if the record was deleted by Fivetran."
+
+      - name: _fivetran_synced
+        description: "Timestamp indicating the last Fivetran sync."
+        
+
+

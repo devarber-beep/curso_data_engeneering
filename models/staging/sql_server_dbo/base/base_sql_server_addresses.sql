@@ -1,21 +1,21 @@
 {{
   config(
     materialized='view',
-    schema="staging"
+    schema="base"
   )
 }}
 
 WITH src_addresses AS (
     SELECT * 
-    FROM {{ ref('base_sql_server_addresses') }}
+    FROM {{ source('sql_server_dbo', 'addresses') }}
     ),
 
 renamed_casted AS (
     SELECT
           address_id,
-          {{ dbt_utils.generate_surrogate_key(['ZIPCODE']) }} as zipcode, --DatoSensible
+          zipcode::VARCHAR as zipcode, --DatoSensible
           country,
-          {{ dbt_utils.generate_surrogate_key(['ADDRESS']) }} as address, --DatoSensible
+          address, --DatoSensible
           state,
           _fivetran_deleted,
           _fivetran_synced

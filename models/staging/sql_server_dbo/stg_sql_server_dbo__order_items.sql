@@ -1,9 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema="staging"
   )
 }}
-    /*schema="staging"*/
 
 WITH src_order_items AS (
     SELECT * 

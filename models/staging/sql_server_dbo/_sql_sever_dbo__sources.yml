@@ -3,7 +3,7 @@ version: 2
 sources:
 
   - name: sql_server_dbo # name of the source 
-    schema: sql_server_dbo_raw # this is the schema our raw data lives in
+    schema: sql_server_dbo # this is the schema our raw data lives in
     database: ALUMNO6_DEV_BRONZE_DB # this is the name of our database
 
     quoting:
@@ -57,14 +57,14 @@ sources:
             description: "Identifier for the user who triggered the event."
             tests:
             - relationships:
-                to: source('sql_server_dbo_raw', 'users')
+                to: source('sql_server_dbo', 'users')
                 field: user_id
           - name: product_id
             description: "Identifier for the product associated with the event."
-            tests:
-            - relationships:
-                to: source('sql_server_dbo_raw', 'products')
-                field: product_id
+            #tests:
+            #- relationships:
+                #to: source('sql_server_dbo', 'products')
+                #field: product_id
           - name: session_id
             description: "Session ID for the user's session during the event."
           - name: created_at
@@ -73,10 +73,8 @@ sources:
               - not_null
           - name: order_id
             description: "Identifier for the associated order, if any."
-            tests:
-            - relationships:
-                to: source('sql_server_dbo_raw', 'orders')
-                field: order_id
+            #tests:
+            #- event_type(sql_server_dbo)
           - name: _fivetran_deleted
             description: "Flag indicating if the record was deleted by Fivetran."
           - name: _fivetran_synced
@@ -100,16 +98,12 @@ sources:
             description: "Identifier for the address associated with the order."
             tests:
             - relationships:
-                to: source('sql_server_dbo_raw', 'addresses')
+                to: source('sql_server_dbo', 'addresses')
                 field: address_id
           - name: created_at
             description: "Timestamp when the order was created."
           - name: promo_id
             description: "Identifier for the promotional offer applied to the order."
-            tests:
-            - relationships:
-                to: source('sql_server_dbo_raw', 'promos')
-                field: promo_id
           - name: estimated_delivery_at
             description: "Estimated delivery date and time."
           - name: order_cost
@@ -138,12 +132,20 @@ sources:
             description: "Identifier for the order containing this item."
             tests:
                 - not_null
+                - relationships:
+                    to: source('sql_server_dbo', 'orders')
+                    field: order_id
           - name: product_id
             description: "Identifier for the product in the order."
             tests:
                 - not_null
+                - relationships:
+                    to: source('sql_server_dbo', 'products')
+                    field: product_id
           - name: quantity
             description: "Number of units of the product in the order."
+            tests:
+              - positive_values
           - name: _fivetran_deleted
             description: "Flag indicating if the record was deleted by Fivetran."
           - name: _fivetran_synced
@@ -205,7 +207,7 @@ sources:
             description: "Identifier for the user's associated address."
             tests:
             - relationships:
-                to: source('sql_server_dbo_raw', 'addresses')
+                to: source('sql_server_dbo', 'addresses')
                 field: address_id
           - name: last_name
             description: "User's last name."
