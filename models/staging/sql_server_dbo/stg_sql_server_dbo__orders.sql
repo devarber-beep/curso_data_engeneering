@@ -1,9 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema="staging"
   )
 }}
-    /*schema="staging"*/
 
 WITH src_orders AS (
     SELECT * 
@@ -13,23 +13,20 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id,
-        shipping_service,
-        shipping_cost,
+     {{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id,
         address_id,
-        {{ dbt_date.convert_timezone('GMT', 'UTC', 'created_at') }} AS created_at_utc,
-        event_id, -- relationship
-        product_id, --relationship
-        {{ dbt_date.convert_timezone('GMT', 'UTC', 'estimated_delivery_at') }} AS estimated_delivery_at_utc,
-        order_cost, -- es calculado y debe ser comprobado
+        {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc,
+        {{ dbt_date.convert_timezone('estimated_delivery_at', 'GMT', 'UTC') }} AS estimated_delivery_at_utc,
         user_id, --relationship
-        order_total,
-        {{ dbt_date.convert_timezone('GMT', 'UTC', 'delivery_at') }} AS delivery_at_utc,
-        {{ dbt_utils.generate_surrogate_key('TRACKING_ID') }}, --dato sensible
+        {{ dbt_date.convert_timezone('delivered_at', 'GMT', 'UTC') }} AS delivered_at_utc,
+         case
+          when tracking_id = '' then null
+          else  tracking_id
+          end as tracking_id,
         status,
-          _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_orders
-    WHERE _FIVETRAN_DELETED = FALSE
+    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

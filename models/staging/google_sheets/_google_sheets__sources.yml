@@ -1,8 +1,7 @@
 version: 2
 
 sources:
-
-  - name: google_sheets # name of the source 
+  - name: google_sheets # name of the source
     description: >
       Raw data demo from Database.
     schema: google_sheets # this is the schema our raw data lives in
@@ -14,11 +13,10 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 48, period: hour}
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
 
     tables:
-
       - name: budget
         loaded_at_field: _fivetran_synced
         description: >
@@ -35,6 +33,9 @@ sources:
               UUID for each unique product on platform.
             tests:
               - not_null
+              - relationships:
+                  to: source('sql_server_dbo', 'products')
+                  field: product_id
           - name: quantity
             description: >
               Number of units for each product and each month for products.

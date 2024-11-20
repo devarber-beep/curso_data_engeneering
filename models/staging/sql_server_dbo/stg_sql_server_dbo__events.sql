@@ -1,9 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema="staging"
   )
 }}
-    /*schema="staging"*/
 
 WITH src_events AS (
     SELECT * 
@@ -13,17 +13,16 @@ WITH src_events AS (
 renamed_casted AS (
     SELECT
         event_id,
-        {{ dbt_utils.generate_surrogate_key('PAGE_URL') }}, -- Dato sensible
-        {{ dbt_utils.generate_surrogate_key('EVENT_TYPE') }}, --DatoSensible + RELATIONSHIP
+        {{ dbt_utils.generate_surrogate_key(['PAGE_URL']) }} as page_url, -- Dato sensible
+        {{ dbt_utils.generate_surrogate_key(['EVENT_TYPE']) }} as event_type_id, --DatoSensible + RELATIONSHIP
         user_id, --relationship
         product_id, --relationship
-        session_id, --relationship
-        {{ dbt_date.convert_timezone('GMT', 'UTC', 'created_at') }} AS created_at_utc, --Ponerlo en UTC
+        session_id,
+        {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc, --Ponerlo en UTC
         order_id, --relationship
-          _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_events
-    WHERE _FIVETRAN_DELETED = FALSE
+    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

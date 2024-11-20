@@ -1,9 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema="staging"
   )
 }}
-    /*schema="staging"*/
 
 WITH src_order_items AS (
     SELECT * 
@@ -12,13 +12,13 @@ WITH src_order_items AS (
 
 renamed_casted AS (
     SELECT
+        {{ dbt_utils.generate_surrogate_key(['ORDER_ID', 'PRODUCT_ID']) }} as order_item_id,
         order_id, --relationship
         product_id, --relationship
         quantity,
-          _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_order_items 
-    WHERE _FIVETRAN_DELETED = FALSE
+    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted
