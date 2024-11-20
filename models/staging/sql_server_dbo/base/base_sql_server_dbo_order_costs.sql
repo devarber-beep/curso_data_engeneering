@@ -12,7 +12,7 @@ renamed_casted_orders_costs AS (
         , SHIPPING_COST
         , ORDER_TOTAL
         , {{ dbt_utils.generate_surrogate_key(['promo_id']) }} AS promo_id  
-        , CONVERT_TIMEZONE('UTC', _fivetran_synced) AS DATE_LOAD_UTC
+        , CONVERT_TIMEZONE('UTC', _fivetran_synced) AS date_load
         , _FIVETRAN_DELETED AS is_deleted
     FROM src_orders
     )

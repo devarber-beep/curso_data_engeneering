@@ -16,7 +16,6 @@ renamed_casted AS (
         order_id, --relationship
         product_id, --relationship
         quantity,
-          _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_order_items 
     WHERE _FIVETRAN_DELETED is null

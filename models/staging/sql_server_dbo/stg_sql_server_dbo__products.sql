@@ -16,7 +16,6 @@ renamed_casted AS (
         price,
         {{ dbt_utils.generate_surrogate_key(['NAME']) }} as hash_name, -- dato sensible
         inventory,
-          _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_products 
     WHERE _FIVETRAN_DELETED IS NULL

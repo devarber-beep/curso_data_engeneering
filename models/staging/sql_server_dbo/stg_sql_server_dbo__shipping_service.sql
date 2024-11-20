@@ -1,3 +1,10 @@
+{{
+  config(
+    materialized='view',
+    schema="staging"
+  )
+}}
+
 WITH src_shipping_service AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'orders') }}
@@ -16,24 +23,3 @@ renamed_casted_shipping_service AS (
     )
 
 SELECT * FROM renamed_casted_shipping_service
-
-/*with 
-
-base as (
-
-    select * from {{ ref('base_sql_server_dbo__orders_') }}
-
-),
-
-shipping_services_list as (
-
-    select
-        DISTINCT(shipping_service),
-        shipping_service_id
-
-    from base
-
-)
-
-select * from shipping_services_list
-*/

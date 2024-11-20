@@ -17,7 +17,6 @@ renamed_casted AS (
           when shipping_service = '' then null
           else  shipping_service
         end as shipping_service,
-        shipping_cost,
         address_id,
         {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc,
         case
@@ -25,9 +24,7 @@ renamed_casted AS (
           else  {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} --dato sensible
           end as promo_id, -- relationship
         {{ dbt_date.convert_timezone('estimated_delivery_at', 'GMT', 'UTC') }} AS estimated_delivery_at_utc,
-        order_cost, -- es calculado y debe ser comprobado
         user_id, --relationship
-        order_total,
         {{ dbt_date.convert_timezone('delivered_at', 'GMT', 'UTC') }} AS delivered_at_utc,
          case
           when tracking_id = '' then null
@@ -41,40 +38,3 @@ renamed_casted AS (
     )
 
 SELECT * FROM renamed_casted
-
-
-/*
-WITH base_orders_costs AS (
-    SELECT * 
-    FROM {{ ref('BASE_SQL_SREVER_DBO__ORDERS_COSTS') }}
-    ),
-
-base_orders_shipments AS (
-    SELECT * 
-    FROM {{ ref('BASE_SQL_SREVER_DBO__ORDERS_SHIPMENTS') }}
-    ),
-
-renamed_casted_orders AS (
-    SELECT
-          A.ORDER_ID
-        , A.USER_ID 
-        , A.CREATED_AT_UTC
-        , ORDER_COST
-        , ORDER_TOTAL
-        , PROMO_ID     
-        , ADDRESS_ID
-        , TRACKING_ID
-        , SHIPPING_SERVICE_ID
-        , SHIPPING_COST
-        , ESTIMATED_DELIVERY_AT_UTC
-        , DELIVERY_STATUS
-        , DELIVERED_AT_UTC
-        , A.DATE_LOAD_UTC
-        , A.is_deleted
-    FROM base_orders_costs A
-    JOIN base_orders_shipments B
-        ON A.ORDER_ID=B.ORDER_ID
-    )
-
-SELECT * FROM renamed_casted_orders
-*/

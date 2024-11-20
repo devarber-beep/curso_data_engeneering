@@ -16,8 +16,7 @@ renamed_casted AS (
           {{ dbt_utils.generate_surrogate_key(['ZIPCODE']) }} as zipcode, --DatoSensible
           country,
           {{ dbt_utils.generate_surrogate_key(['ADDRESS']) }} as address, --DatoSensible
-          state,
-          _fivetran_deleted,
+          {{ dbt_utils.generate_surrogate_key(['STATE']) }} as state_id,
           _fivetran_synced
     FROM src_addresses
     WHERE _fivetran_deleted is null

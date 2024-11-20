@@ -74,6 +74,12 @@ sources:
               - not_null
           - name: order_id
             description: "Identifier for the associated order, if any."
+            #tests:
+            #  - relation_values_not_void:
+            #      base_model: source('sql_server_dbo', 'events')
+            #      base_column: order_id
+            #      reference_model: source('sql_server_dbo', 'products')
+            #      reference_column: order_id
           - name: _fivetran_deleted
             description: "Flag indicating if the record was deleted by Fivetran."
           - name: _fivetran_synced
