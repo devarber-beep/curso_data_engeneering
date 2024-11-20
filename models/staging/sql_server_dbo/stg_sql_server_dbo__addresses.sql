@@ -20,6 +20,7 @@ renamed_casted AS (
           _fivetran_deleted,
           _fivetran_synced
     FROM src_addresses
+    WHERE _fivetran_deleted is null
     )
 
 SELECT * FROM renamed_casted

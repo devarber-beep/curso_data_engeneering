@@ -1,21 +1,21 @@
-{% test relation_values_not_void(model, column_name) %}
+{% test relation_values_not_void(base_model, base_column, reference_model, reference_column) %}
 
-   WITH filtered_events AS (
+WITH filtered_values AS (
     SELECT
-        {{ column_name }}  --order_id
-    FROM {{ model }}
-    WHERE order_id IS NOT NULL
+        {{ base_column }}
+    FROM {{ base_model }}
+    WHERE {{ base_column }} IS NOT NULL
 ),
-missing_orders AS (
+missing_values AS (
     SELECT
-        fe.event_id
-    FROM filtered_events fe
-    LEFT JOIN ALUMNO6_DEV_BRONZE_DB.SQL_SERVER_DBO.events o
-    ON fe.order_id = o.order_id
-    WHERE o.order_id IS NULL
+        fv.{{ base_column }}
+    FROM filtered_values fv
+    LEFT JOIN {{ reference_model }} rm
+    ON fv.{{ base_column }} = rm.{{ reference_column }}
+    WHERE rm.{{ reference_column }} IS NULL
 )
 
 SELECT COUNT(*) AS error_count
-FROM missing_orders;
+FROM missing_values;
 
 {% endtest %}

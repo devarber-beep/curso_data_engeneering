@@ -1,9 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema="staging"
   )
 }}
-    /*schema="staging"*/
 
 WITH src_products AS (
     SELECT * 
@@ -14,12 +14,12 @@ renamed_casted AS (
     SELECT
         product_id,
         price,
-        {{ dbt_utils.generate_surrogate_key('NAME') }}, -- dato sensible
+        {{ dbt_utils.generate_surrogate_key(['NAME']) }} as hash_name, -- dato sensible
         inventory,
           _fivetran_deleted,
           _fivetran_synced AS date_load
     FROM src_products 
-    WHERE _FIVETRAN_DELETED = FALSE
+    WHERE _FIVETRAN_DELETED IS NULL
     )
 
 SELECT * FROM renamed_casted

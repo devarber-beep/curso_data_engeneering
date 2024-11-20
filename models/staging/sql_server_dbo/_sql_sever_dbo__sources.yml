@@ -1,8 +1,7 @@
 version: 2
 
 sources:
-
-  - name: sql_server_dbo # name of the source 
+  - name: sql_server_dbo # name of the source
     schema: sql_server_dbo # this is the schema our raw data lives in
     database: ALUMNO6_DEV_BRONZE_DB # this is the name of our database
 
@@ -12,8 +11,8 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 24, period: day}
-      error_after: {count: 48, period: day}
+      warn_after: { count: 24, period: day }
+      error_after: { count: 48, period: day }
 
     tables:
       - name: addresses
@@ -56,15 +55,17 @@ sources:
           - name: user_id
             description: "Identifier for the user who triggered the event."
             tests:
-            - relationships:
-                to: source('sql_server_dbo', 'users')
-                field: user_id
+              - relationships:
+                  to: source('sql_server_dbo', 'users')
+                  field: user_id
           - name: product_id
             description: "Identifier for the product associated with the event."
             #tests:
-            #- relationships:
-                #to: source('sql_server_dbo', 'products')
-                #field: product_id
+            #  - relation_values_not_void:
+            #      base_model: source('sql_server_dbo', 'events')
+            #      base_column: order_id
+            #      reference_model: source('sql_server_dbo', 'products')
+            #      reference_column: order_id
           - name: session_id
             description: "Session ID for the user's session during the event."
           - name: created_at
@@ -73,8 +74,6 @@ sources:
               - not_null
           - name: order_id
             description: "Identifier for the associated order, if any."
-            #tests:
-            #- event_type(sql_server_dbo)
           - name: _fivetran_deleted
             description: "Flag indicating if the record was deleted by Fivetran."
           - name: _fivetran_synced
@@ -97,9 +96,9 @@ sources:
           - name: address_id
             description: "Identifier for the address associated with the order."
             tests:
-            - relationships:
-                to: source('sql_server_dbo', 'addresses')
-                field: address_id
+              - relationships:
+                  to: source('sql_server_dbo', 'addresses')
+                  field: address_id
           - name: created_at
             description: "Timestamp when the order was created."
           - name: promo_id
@@ -110,6 +109,10 @@ sources:
             description: "Total cost of the order before taxes and discounts."
           - name: user_id
             description: "Identifier for the user who placed the order."
+            tests:
+              - relationships:
+                  to: source('sql_server_dbo', 'users')
+                  field: user_id
           - name: order_total
             description: "Final total cost of the order after discounts."
           - name: delivered_at
@@ -131,17 +134,17 @@ sources:
           - name: order_id
             description: "Identifier for the order containing this item."
             tests:
-                - not_null
-                - relationships:
-                    to: source('sql_server_dbo', 'orders')
-                    field: order_id
+              - not_null
+              - relationships:
+                  to: source('sql_server_dbo', 'orders')
+                  field: order_id
           - name: product_id
             description: "Identifier for the product in the order."
             tests:
-                - not_null
-                - relationships:
-                    to: source('sql_server_dbo', 'products')
-                    field: product_id
+              - not_null
+              - relationships:
+                  to: source('sql_server_dbo', 'products')
+                  field: product_id
           - name: quantity
             description: "Number of units of the product in the order."
             tests:
@@ -206,9 +209,9 @@ sources:
           - name: address_id
             description: "Identifier for the user's associated address."
             tests:
-            - relationships:
-                to: source('sql_server_dbo', 'addresses')
-                field: address_id
+              - relationships:
+                  to: source('sql_server_dbo', 'addresses')
+                  field: address_id
           - name: last_name
             description: "User's last name."
           - name: created_at
