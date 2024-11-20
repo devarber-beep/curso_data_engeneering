@@ -18,7 +18,6 @@ renamed_casted_shipping_service AS (
             ELSE SHIPPING_SERVICE 
         END AS SHIPPING_SERVICE_DESC
         , CURRENT_TIMESTAMP AS date_load
-        , _FIVETRAN_DELETED AS is_deleted
     FROM src_shipping_service
     )
 

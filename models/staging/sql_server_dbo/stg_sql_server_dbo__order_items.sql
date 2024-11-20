@@ -12,7 +12,7 @@ WITH src_order_items AS (
 
 renamed_casted AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['ORDER_ID', 'PRODUCT_ID']) }},
+        {{ dbt_utils.generate_surrogate_key(['ORDER_ID', 'PRODUCT_ID']) }} as order_item_id,
         order_id, --relationship
         product_id, --relationship
         quantity,

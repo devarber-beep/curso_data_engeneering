@@ -14,7 +14,7 @@ renamed_casted AS (
     SELECT
         product_id,
         price,
-        {{ dbt_utils.generate_surrogate_key(['NAME']) }} as hash_name, -- dato sensible
+        name, -- dato sensible -> No para esta tabla
         inventory,
           _fivetran_synced AS date_load
     FROM src_products 
