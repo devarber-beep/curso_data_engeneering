@@ -25,7 +25,10 @@ renamed_casted AS (
         order_cost,
         user_id, --relationship
         delivered_at,
-        tracking_id,
+        case
+          when tracking_id = '' then null
+          else  tracking_id
+          end as tracking_id,
         status,
         _fivetran_deleted,
           _fivetran_synced AS date_load
