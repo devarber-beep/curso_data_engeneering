@@ -7,7 +7,7 @@
 
 WITH src_events AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'events') }}
+    FROM {{ ref('base_sql_server_dbo__events') }}
     ),
 
 renamed_casted AS (
