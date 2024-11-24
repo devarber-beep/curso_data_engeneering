@@ -1,6 +1,7 @@
 {{
   config(
-    materialized='incremental'
+    materialized='view',
+    schema="base"
   )
 }}
 
