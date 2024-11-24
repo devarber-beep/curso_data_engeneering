@@ -1,0 +1,293 @@
+version: 2
+
+models:
+  - name: stg_sql_server_dbo__addresses
+    description: "User addresses including country, state, and postal code."
+    columns:
+      - name: address_id
+        description: "Unique identifier for the address."
+        tests:
+          - unique
+          - not_null
+      - name: zipcode
+        description: "Postal code."
+      - name: country
+        description: "Country of the address."
+      - name: address
+        description: "Detailed address information."
+      - name: state_id
+        description: "Identifier for the state."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__states')
+              field: state_id
+      - name: date_load
+        description: "Date when the address data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__events
+    description: "Logs of user events on the platform."
+    columns:
+      - name: event_id
+        description: "Unique identifier for the event."
+        tests:
+          - unique
+          - not_null
+      - name: page_url
+        description: "URL of the page related to the event."
+      - name: event_type_id
+        description: "Type of event."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__event_types')
+              field: event_type_id
+      - name: user_id
+        description: "User who triggered the event."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__users')
+              field: user_id
+      - name: product_id
+        description: "Product associated with the event."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__products')
+              field: product_id
+      - name: session_id
+        description: "Session during which the event occurred."
+      - name: created_at_utc
+        description: "Date and time when the event was created."
+      - name: order_id
+        description: "Order associated with the event."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__orders')
+              field: order_id
+      - name: date_load
+        description: "Date when the event data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__event_types
+    description: "Types of events triggered by users."
+    columns:
+      - name: event_type_id
+        description: "Unique identifier for the event type."
+      - name: name
+        description: "Name of the event type."
+
+  - name: stg_sql_server_dbo__orders
+    description: "Orders placed by users."
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order."
+        tests:
+          - unique
+          - not_null
+      - name: shipping_service_id
+        description: "Identifier for the shipping service."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__shipping_service')
+              field: shipping_service_id
+      - name: address_id
+        description: "Address associated with the order."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__addresses')
+              field: address_id
+      - name: created_at_utc
+        description: "Date and time when the order was created."
+      - name: estimated_delivery_at_utc
+        description: "Estimated delivery date and time."
+      - name: user_id
+        description: "User who placed the order."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__users')
+              field: user_id
+      - name: delivered_at_utc
+        description: "Date and time when the order was delivered."
+      - name: tracking_id
+        description: "Tracking number for the order."
+      - name: status
+        description: "Current status of the order."
+      - name: date_load
+        description: "Date when the order data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__orders_cost
+    description: "Costs associated with orders."
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__orders')
+              field: order_id
+      - name: shipping_cost
+        description: "Cost of shipping."
+      - name: order_cost
+        description: "Total cost of the order."
+      - name: order_total
+        description: "Final total after discounts."
+      - name: promo_id
+        description: "Identifier for the applied promotion."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__promos')
+              field: promo_id
+      - name: date_load
+        description: "Date when the cost data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__order_items
+    description: "Items included in user orders."
+    columns:
+      - name: order_item_id
+        description: "Unique identifier for the order item."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Order associated with the item."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__orders')
+              field: order_id
+      - name: product_id
+        description: "Product included in the order item."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__products')
+              field: product_id
+      - name: quantity
+        description: "Quantity of the product."
+      - name: date_load
+        description: "Date when the order item data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__products
+    description: "Information about available products."
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product."
+        tests:
+          - unique
+          - not_null
+      - name: price
+        description: "Price of the product."
+      - name: name
+        description: "Name of the product."
+      - name: inventory
+        description: "Available inventory."
+      - name: date_load
+        description: "Date when the product data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__promos
+    description: "Available and applied promotions."
+    columns:
+      - name: promo_id
+        description: "Unique identifier for the promotion."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Name of the promotion."
+      - name: discount_in_eu
+        description: "Discount amount in euros."
+      - name: status
+        description: "Current status of the promotion."
+      - name: date_load
+        description: "Date when the promotion data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__shipping_service
+    description: "Available shipping services."
+    columns:
+      - name: shipping_service_id
+        description: "Unique identifier for the shipping service."
+        tests:
+          - unique
+          - not_null
+      - name: shipping_service_desc
+        description: "Description of the shipping service."
+      - name: date_load
+        description: "Date when the shipping service data was loaded."
+
+  - name: stg_sql_server_dbo__states
+    description: "Information about geographic states."
+    columns:
+      - name: state_id
+        description: "Unique identifier for the state."
+      - name: name
+        description: "Name of the state."
+
+  - name: stg_sql_server_dbo__time
+    description: "Temporal data related to dates and periods."
+    columns:
+      - name: date_id
+        description: "Unique identifier for the date."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Year."
+      - name: month_number
+        description: "Month number."
+      - name: month_name
+        description: "Name of the month."
+      - name: day_of_month
+        description: "Day of the month."
+      - name: weekday_number
+        description: "Day of the week as a number."
+      - name: weekday_name
+        description: "Name of the weekday."
+      - name: quarter
+        description: "Quarter of the year."
+      - name: quatrimester
+        description: "Four-month period."
+      - name: semester
+        description: "Half-year period."
+      - name: day_type
+        description: "Type of day (weekday, keekend)."
+
+  - name: stg_sql_server_dbo__users
+    description: "Information about registered users."
+    columns:
+      - name: user_id
+        description: "Unique identifier for the user."
+        tests:
+          - unique
+          - not_null
+      - name: updated_at_utc
+        description: "Last update date for the user."
+      - name: address_id
+        description: "Identifier for the user's address."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__addresses')
+              field: address_id
+      - name: last_name
+        description: "Last name of the user."
+      - name: created_at_utc
+        description: "Date and time when the user was created."
+      - name: phone_number
+        description: "Phone number of the user."
+      - name: total_orders
+        description: "Total number of orders placed by the user."
+      - name: first_name
+        description: "First name of the user."
+      - name: email
+        description: "Email address of the user."
+      - name: date_load
+        description: "Date when the user data was loaded."
+      - name: _fivetran_deleted
+        description: "Fivetran deletion indicator."

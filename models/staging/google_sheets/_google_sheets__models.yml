@@ -1,1 +1,32 @@
+version: 2
 
+models:
+  - name: stg_google_sheets__bugdet
+    description: "This table contains budget information imported from Google Sheets."
+    columns:
+      - name: budget_id
+        description: "Unique identifier for the budget."
+        tests:
+          - unique
+      - name: product_id
+        description: "Unique identifier for the product."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo__products')
+              field: product_id
+      - name: quantity
+        description: "Quantity of the budgeted product."
+      - name: month
+        description: "Month of the budget."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server__time')
+              field: month_number
+      - name: year
+        description: "Year of the budget."
+        tests:
+          - relationships:
+              to: ref('stg_sql_server__time')
+              field: year
+      - name: date_load
+        description: "Date when the budget was loaded."
