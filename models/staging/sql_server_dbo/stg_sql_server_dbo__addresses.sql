@@ -17,7 +17,7 @@ renamed_casted AS (
           country,
           {{ dbt_utils.generate_surrogate_key(['ADDRESS']) }} as address, --DatoSensible
           {{ dbt_utils.generate_surrogate_key(['STATE']) }} as state_id,
-          _fivetran_synced
+          _fivetran_synced as date_load
     FROM src_addresses
     WHERE _fivetran_deleted is null
     )

@@ -7,7 +7,7 @@
 
 WITH src_orders AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'orders') }}
+    FROM {{ ref('base_sql_server_dbo__orders')}}
     ),
 
 renamed_casted AS (
@@ -16,10 +16,7 @@ renamed_casted AS (
         shipping_cost,
         order_cost, -- es calculado y debe ser comprobado
         order_total,
-        case
-          when promo_id = '' then null 
-          else  {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} --dato sensible
-          end as promo_id, -- relationship
+        promo_id,
           _fivetran_synced AS date_load
     FROM src_orders
     WHERE _FIVETRAN_DELETED is null

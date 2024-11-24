@@ -7,21 +7,20 @@
 
 WITH src_promos AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'promos') }}
+    FROM {{ ref('base_sql_server_dbo__promos') }}
     ),
 
 renamed_casted AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} as promo_id, --dato sensible
-        discount AS discount_in_eu,
-        CASE
-            WHEN LOWER(status) = 'active' THEN 1
-            WHEN LOWER(status) = 'inactive' THEN 0
-            ELSE NULL
-        END AS status_boolean,
-          _fivetran_synced AS date_load
-    FROM src_promos 
-    WHERE _fivetran_deleted is null
+        {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} as promo_id,
+        promo_id as name, --dato sensible
+        discount_in_eu,
+        status,
+          _fivetran_synced AS date_load,
+    FROM src_promos
+    WHERE _FIVETRAN_DELETED IS NULL 
+
+)
     )
 
 SELECT * FROM renamed_casted
