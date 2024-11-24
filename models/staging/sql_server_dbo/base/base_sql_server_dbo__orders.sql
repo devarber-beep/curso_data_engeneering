@@ -16,7 +16,7 @@ renamed_casted AS (
         case
           when shipping_service = '' then 'not_asigned'
           else  shipping_service
-        end as shipping_service_id,
+        end as shipping_service,
         shipping_cost,
         address_id,
         created_at,
@@ -26,6 +26,7 @@ renamed_casted AS (
           end as promo_id,
         estimated_delivery_at,
         order_cost,
+        order_total,
         user_id, --relationship
         delivered_at,
         case
@@ -34,7 +35,7 @@ renamed_casted AS (
           end as tracking_id,
         status,
         _fivetran_deleted,
-          _fivetran_synced AS date_load
+          _fivetran_synced
     FROM src_orders
     )
 

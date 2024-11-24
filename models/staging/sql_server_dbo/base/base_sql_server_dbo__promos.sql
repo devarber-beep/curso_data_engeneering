@@ -17,8 +17,8 @@ renamed_casted AS (
             WHEN discount < 0 THEN 0  
             ELSE discount
         END  AS discount_in_eu,
-        LOWER(status),
-          _fivetran_synced AS date_load,
+        LOWER(status) as status,
+          _fivetran_synced,
         _fivetran_deleted
     FROM src_promos 
     union all
@@ -28,6 +28,5 @@ renamed_casted AS (
             , null
             , null
 )
-    )
 
 SELECT * FROM renamed_casted

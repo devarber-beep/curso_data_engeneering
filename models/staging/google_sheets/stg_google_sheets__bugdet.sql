@@ -9,7 +9,7 @@ WITH source AS (
 )
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['PRODUCT_ID', 'MONTH']) }} as budget_id
+    {{ dbt_utils.generate_surrogate_key(['PRODUCT_ID', 'MONTH']) }} as budget_id,
     PRODUCT_ID,
     QUANTITY,
     MONTH,

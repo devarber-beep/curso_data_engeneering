@@ -21,6 +21,5 @@ renamed_casted AS (
     FROM src_promos
 
 )
-    )
 
 SELECT * FROM renamed_casted
