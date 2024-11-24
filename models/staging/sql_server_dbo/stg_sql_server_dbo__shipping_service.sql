@@ -7,7 +7,7 @@
 
 WITH src_shipping_service AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'orders') }}
+    FROM {{ ref("base_sql_server_dbo__orders") }}
     ),
 
 renamed_casted_shipping_service AS (
