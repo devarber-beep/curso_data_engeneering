@@ -17,9 +17,9 @@ renamed_casted AS (
         order_cost, -- es calculado y debe ser comprobado
         order_total,
         promo_id,
-          _fivetran_synced AS date_load
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_orders
-    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

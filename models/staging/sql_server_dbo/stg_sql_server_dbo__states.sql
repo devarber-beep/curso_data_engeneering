@@ -15,7 +15,6 @@ renamed_casted AS (
           {{ dbt_utils.generate_surrogate_key(['STATE']) }} as state_id, --DatoSensible
           state as name
     FROM src_states
-    WHERE _fivetran_deleted is null
     )
 
 SELECT * FROM renamed_casted

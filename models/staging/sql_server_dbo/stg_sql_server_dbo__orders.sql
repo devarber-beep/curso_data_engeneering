@@ -21,9 +21,9 @@ renamed_casted AS (
         {{ dbt_date.convert_timezone('delivered_at', 'GMT', 'UTC') }} AS delivered_at_utc,
          tracking_id,
         status,
-          _fivetran_synced AS date_load
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_orders
-    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

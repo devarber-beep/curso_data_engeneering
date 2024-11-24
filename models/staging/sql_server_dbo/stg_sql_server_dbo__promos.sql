@@ -16,9 +16,9 @@ renamed_casted AS (
         promo_id as name, --dato sensible
         discount_in_eu,
         status,
-          _fivetran_synced AS date_load,
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_promos
-    WHERE _FIVETRAN_DELETED IS NULL 
 
 )
     )

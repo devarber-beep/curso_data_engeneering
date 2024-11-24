@@ -14,5 +14,5 @@ SELECT
     QUANTITY,
     MONTH,
     YEAR,
-    CONVERT_TIMEZONE('UTC', _FIVETRAN_SYNCED) AS _FIVETRAN_SYNCED_UTC
+    {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
 FROM source
