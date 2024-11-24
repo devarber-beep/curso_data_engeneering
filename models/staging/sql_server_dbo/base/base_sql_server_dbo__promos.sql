@@ -25,7 +25,7 @@ renamed_casted AS (
     select  'sin_promo'
             , 0
             , 'undefined'
-            , null
+            , CURRENT_TIMESTAMP
             , null
 )
 
