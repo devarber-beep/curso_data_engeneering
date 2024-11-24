@@ -17,9 +17,9 @@ renamed_casted AS (
           country,
           {{ dbt_utils.generate_surrogate_key(['ADDRESS']) }} as address, --DatoSensible
           {{ dbt_utils.generate_surrogate_key(['STATE']) }} as state_id,
-          _fivetran_synced
+          {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_addresses
-    WHERE _fivetran_deleted is null
     )
 
 SELECT * FROM renamed_casted

@@ -21,9 +21,9 @@ renamed_casted AS (
         total_orders,
         {{ dbt_utils.generate_surrogate_key(['FIRST_NAME']) }} as first_name, --dato sensible
         {{ dbt_utils.generate_surrogate_key(['EMAIL']) }} as email, --dato sensible
-          _fivetran_synced AS date_load
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_users 
-    WHERE _fivetran_deleted is null
     )
 
 SELECT * FROM renamed_casted

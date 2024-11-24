@@ -16,9 +16,9 @@ renamed_casted AS (
         order_id, --relationship
         product_id, --relationship
         quantity,
-          _fivetran_synced AS date_load
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_order_items 
-    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

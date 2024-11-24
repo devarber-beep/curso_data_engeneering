@@ -20,9 +20,9 @@ renamed_casted AS (
         session_id,
         {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc, --Ponerlo en UTC
         order_id, --relationship
-          _fivetran_synced AS date_load
+        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+          _fivetran_deleted
     FROM src_events
-    WHERE _FIVETRAN_DELETED is null
     )
 
 SELECT * FROM renamed_casted

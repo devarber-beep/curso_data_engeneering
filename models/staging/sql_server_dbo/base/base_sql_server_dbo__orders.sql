@@ -20,7 +20,10 @@ renamed_casted AS (
         shipping_cost,
         address_id,
         created_at,
-        promo_id
+        case
+          when promo_id = '' then 'sin_promo'
+          else  promo_id
+          end as promo_id,
         estimated_delivery_at,
         order_cost,
         user_id, --relationship
