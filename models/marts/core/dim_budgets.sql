@@ -1,7 +1,8 @@
 {{
   config(
-    materialized='table'.,
-    schema='mart'
+    database='ALUMNO6_DEV_GOLD_DB',
+    materialized='table',
+    schema='core'
   )
 }}
 
