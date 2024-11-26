@@ -15,12 +15,8 @@ models:
         description: "Country of the address."
       - name: address
         description: "Detailed address information."
-      - name: state_id
+      - name: state
         description: "Identifier for the state."
-        tests:
-          - relationships:
-              to: ref('stg_sql_server_dbo__states')
-              field: state_id
       - name: date_load
         description: "Date when the address data was loaded."
       - name: _fivetran_deleted
@@ -36,12 +32,8 @@ models:
           - not_null
       - name: page_url
         description: "URL of the page related to the event."
-      - name: event_type_id
+      - name: event_type
         description: "Type of event."
-        tests:
-          - relationships:
-              to: ref('stg_sql_server_dbo__event_types')
-              field: event_type_id
       - name: user_id
         description: "User who triggered the event."
         tests:
@@ -69,14 +61,6 @@ models:
       - name: _fivetran_deleted
         description: "Fivetran deletion indicator."
 
-  - name: stg_sql_server_dbo__event_types
-    description: "Types of events triggered by users."
-    columns:
-      - name: event_type_id
-        description: "Unique identifier for the event type."
-      - name: name
-        description: "Name of the event type."
-
   - name: stg_sql_server_dbo__orders
     description: "Orders placed by users."
     columns:
@@ -85,12 +69,8 @@ models:
         tests:
           - unique
           - not_null
-      - name: shipping_service_id
+      - name: shipping_service
         description: "Identifier for the shipping service."
-        tests:
-          - relationships:
-              to: ref('stg_sql_server_dbo__shipping_service')
-              field: shipping_service_id
       - name: address_id
         description: "Address associated with the order."
         tests:
@@ -113,20 +93,6 @@ models:
         description: "Tracking number for the order."
       - name: status
         description: "Current status of the order."
-      - name: date_load
-        description: "Date when the order data was loaded."
-      - name: _fivetran_deleted
-        description: "Fivetran deletion indicator."
-
-  - name: stg_sql_server_dbo__orders_cost
-    description: "Costs associated with orders."
-    columns:
-      - name: order_id
-        description: "Unique identifier for the order."
-        tests:
-          - relationships:
-              to: ref('stg_sql_server_dbo__orders')
-              field: order_id
       - name: shipping_cost
         description: "Cost of shipping."
       - name: order_cost
@@ -208,27 +174,6 @@ models:
         description: "Date when the promotion data was loaded."
       - name: _fivetran_deleted
         description: "Fivetran deletion indicator."
-
-  - name: stg_sql_server_dbo__shipping_service
-    description: "Available shipping services."
-    columns:
-      - name: shipping_service_id
-        description: "Unique identifier for the shipping service."
-        tests:
-          - unique
-          - not_null
-      - name: shipping_service_desc
-        description: "Description of the shipping service."
-      - name: date_load
-        description: "Date when the shipping service data was loaded."
-
-  - name: stg_sql_server_dbo__states
-    description: "Information about geographic states."
-    columns:
-      - name: state_id
-        description: "Unique identifier for the state."
-      - name: name
-        description: "Name of the state."
 
   - name: stg_sql_server_dbo__time
     description: "Temporal data related to dates and periods."

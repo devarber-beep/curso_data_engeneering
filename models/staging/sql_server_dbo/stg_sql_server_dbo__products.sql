@@ -14,7 +14,7 @@ renamed_casted AS (
     SELECT
         product_id,
         price,
-        name, -- dato sensible -> No para esta tabla
+        name,
         inventory,
         {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
           _fivetran_deleted
