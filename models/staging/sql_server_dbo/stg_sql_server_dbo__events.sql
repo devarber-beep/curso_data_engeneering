@@ -13,8 +13,8 @@ WITH src_events AS (
 renamed_casted AS (
     SELECT
         event_id,
-        {{ dbt_utils.generate_surrogate_key(['PAGE_URL']) }} as page_url, -- Dato sensible
-        {{ dbt_utils.generate_surrogate_key(['EVENT_TYPE']) }} as event_type_id, --DatoSensible + RELATIONSHIP
+        page_url, -- Dato sensible
+        event_type, --DatoSensible + RELATIONSHIP
         user_id, --relationship
         product_id, --relationship
         session_id,

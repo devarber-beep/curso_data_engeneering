@@ -5,6 +5,8 @@
   )
 }}
 
+{% set key = var('encryption_key') %}
+
 WITH src_addresses AS (
     SELECT * 
     FROM {{ ref('base_sql_server_addresses') }}
@@ -13,10 +15,10 @@ WITH src_addresses AS (
 renamed_casted AS (
     SELECT
           address_id,
-          {{ dbt_utils.generate_surrogate_key(['ZIPCODE']) }} as zipcode, --DatoSensible
+          {{ encrypt_field('zipcode', key) }} as encrypted_zipcode, --DatoSensible
           country,
-          {{ dbt_utils.generate_surrogate_key(['ADDRESS']) }} as address, --DatoSensible
-          {{ dbt_utils.generate_surrogate_key(['STATE']) }} as state_id,
+          {{ encrypt_field('address', key) }} as encrypted_address, --DatoSensible
+          state,
           {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
           _fivetran_deleted
     FROM src_addresses

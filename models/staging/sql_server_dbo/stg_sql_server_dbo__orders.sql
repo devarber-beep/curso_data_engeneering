@@ -5,6 +5,8 @@
   )
 }}
 
+{% set key = var('encryption_key') %}
+
 WITH src_orders AS (
     SELECT * 
     FROM {{ ref('base_sql_server_dbo__orders') }}
@@ -13,11 +15,15 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id,
-        {{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id,
+        user_id, --relationship
         address_id,
+        order_cost, 
+        {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} as promo_id,
+        order_total, -- es calculado y debe ser comprobado
+        shipping_cost,
+        {{ encrypt_field('shipping_service', key) }} as encrypted_shipping_service,
         {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc,
         {{ dbt_date.convert_timezone('estimated_delivery_at', 'GMT', 'UTC') }} AS estimated_delivery_at_utc,
-        user_id, --relationship
         {{ dbt_date.convert_timezone('delivered_at', 'GMT', 'UTC') }} AS delivered_at_utc,
          tracking_id,
         status,
