@@ -13,7 +13,7 @@ WITH src_orders AS (
     ),
 
 renamed_casted AS (
-    SELECT
+    SELECT DISTINCT
     {{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id,
     {{ encrypt_field('shipping_service', key) }} as encrypted_name,
     CURRENT_TIMESTAMP AS date_load

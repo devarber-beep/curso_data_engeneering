@@ -87,7 +87,7 @@ models:
         description: "Identifier for the shipping service."
         tests:
           - relationships:
-              field: event_type_id
+              field: shipping_service_id
               to: ref('stg_sql_server_dbo__event_types')
       - name: address_id
         description: "Address associated with the order."
