@@ -14,7 +14,7 @@ renamed_casted AS (
     SELECT
         event_id,
         page_url, -- Dato sensible
-        event_type, --DatoSensible + RELATIONSHIP
+        {{ dbt_utils.generate_surrogate_key(['EVENT_TYPE']) }} as event_type_id, --DatoSensible + RELATIONSHIP
         user_id, --relationship
         product_id, --relationship
         session_id,

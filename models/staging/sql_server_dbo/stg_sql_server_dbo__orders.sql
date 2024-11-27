@@ -21,7 +21,7 @@ renamed_casted AS (
         {{ dbt_utils.generate_surrogate_key(['PROMO_ID']) }} as promo_id,
         order_total, -- es calculado y debe ser comprobado
         shipping_cost,
-        {{ encrypt_field('shipping_service', key) }} as encrypted_shipping_service,
+        {{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id
         {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc,
         {{ dbt_date.convert_timezone('estimated_delivery_at', 'GMT', 'UTC') }} AS estimated_delivery_at_utc,
         {{ dbt_date.convert_timezone('delivered_at', 'GMT', 'UTC') }} AS delivered_at_utc,
