@@ -32,8 +32,12 @@ models:
           - not_null
       - name: page_url
         description: "URL of the page related to the event."
-      - name: event_type
-        description: "Type of event."
+      - name: event_type_id
+        description: "Identifier of type of event."
+        tests:
+          - relationships:
+              field: event_type_id
+              to: ref('stg_sql_server_dbo__event_types')
       - name: user_id
         description: "User who triggered the event."
         tests:
@@ -61,6 +65,16 @@ models:
       - name: _fivetran_deleted
         description: "Fivetran deletion indicator."
 
+  - name: stg_sql_server_dbo__event_types
+    description: "Types of events triggered by users."
+    columns:
+      - name: event_type_id
+        description: "Unique identifier for the event type."
+      - name: name
+        description: "Name of the event type."
+      - name: data_load
+        description: "Date of ingest"
+
   - name: stg_sql_server_dbo__orders
     description: "Orders placed by users."
     columns:
@@ -69,8 +83,12 @@ models:
         tests:
           - unique
           - not_null
-      - name: shipping_service
+      - name: shipping_service_id
         description: "Identifier for the shipping service."
+        tests:
+          - relationships:
+              field: event_type_id
+              to: ref('stg_sql_server_dbo__event_types')
       - name: address_id
         description: "Address associated with the order."
         tests:
@@ -109,6 +127,19 @@ models:
         description: "Date when the cost data was loaded."
       - name: _fivetran_deleted
         description: "Fivetran deletion indicator."
+
+  - name: stg_sql_server_dbo__shipping_service
+    description: "Available shipping services."
+    columns:
+      - name: shipping_service_id
+        description: "Unique identifier for the shipping service."
+        tests:
+          - unique
+          - not_null
+      - name: encrypted_name
+        description: "Description of the shipping service."
+      - name: date_load
+        description: "Date when the shipping service data was loaded."
 
   - name: stg_sql_server_dbo__order_items
     description: "Items included in user orders."
