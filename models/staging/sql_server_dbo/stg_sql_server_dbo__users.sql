@@ -10,22 +10,41 @@
 WITH src_users AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'users') }}
-    ),
+),
+
+src_orders AS (
+    SELECT * 
+    FROM {{ source('sql_server_dbo', 'orders') }}
+),
 
 renamed_casted AS (
     SELECT
-        user_id,
-        address_id,
-        {{ encrypt_field('first_name', key) }} as encrypted_first_name, --dato sensible
-        {{ encrypt_field('last_name', key) }} as encrypted_last_name, --dato sensible
-        {{ encrypt_field('email', key) }} as encrypted_email, --dato sensible
-        {{ encrypt_field('phone_number', key) }} as encrypted_phone_number, --dato sensible
-        {{ dbt_date.convert_timezone('created_at', 'GMT', 'UTC') }} AS created_at_utc, --UTC
-        {{ dbt_date.convert_timezone('updated_at', 'GMT', 'UTC') }} AS updated_at_utc, --indicar y pasarlo a utc
-        total_orders,
-        {{ dbt_date.convert_timezone('_fivetran_synced', 'GMT', 'UTC') }} AS date_load,
-          _fivetran_deleted
-    FROM src_users 
-    )
+        u.user_id,
+        u.address_id,
+        {{ encrypt_field('u.first_name', key) }} AS encrypted_first_name, -- dato sensible
+        {{ encrypt_field('u.last_name', key) }} AS encrypted_last_name, -- dato sensible
+        {{ encrypt_field('u.email', key) }} AS encrypted_email, -- dato sensible
+        {{ encrypt_field('u.phone_number', key) }} AS encrypted_phone_number, -- dato sensible
+        {{ dbt_date.convert_timezone('u.created_at', 'GMT', 'UTC') }} AS created_at_utc, 
+        {{ dbt_date.convert_timezone('u.updated_at', 'GMT', 'UTC') }} AS updated_at_utc, 
+        COALESCE(COUNT(o.order_id), 0) AS total_orders, -- Total de órdenes por usuario
+        {{ dbt_date.convert_timezone('u._fivetran_synced', 'GMT', 'UTC') }} AS date_load,
+        u._fivetran_deleted
+    FROM src_users u
+    LEFT JOIN src_orders o
+        ON o.user_id = u.user_id
+    GROUP BY 
+        u.user_id,
+        u.address_id,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.phone_number,
+        u.created_at,
+        u.updated_at,
+        u._fivetran_synced,
+        u._fivetran_deleted
+)
 
-SELECT * FROM renamed_casted
+SELECT * 
+FROM renamed_casted

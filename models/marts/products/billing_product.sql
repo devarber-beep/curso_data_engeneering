@@ -14,7 +14,7 @@ WITH ORDER_TOTALS AS (
         COALESCE(foc.PROMO_ID, 0) AS PROMO_ID,
         COALESCE(dp.DISCOUNT_IN_EU, 0) AS DISCOUNT,
         foc.ORDER_TOTAL - COALESCE(dp.DISCOUNT_IN_EU, 0) AS ADJUSTED_TOTAL -- Total ajustado
-    FROM {{ ref("fact_orders_costs") }} foc
+    FROM {{ ref("dim_orders") }} foc
     LEFT JOIN {{ ref("dim_promos") }} dp
         ON foc.PROMO_ID = dp.PROMO_ID
 ),
