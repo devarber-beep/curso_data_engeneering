@@ -11,11 +11,12 @@ with stg_event_types as (
 )
 
 SELECT 
-    {{ dbt_utils.star(from=ref('stg_sql_server_dbo__events'), except=['_fivetran_deleted', 'event_type_id']) }},
-    et.name
+    {{ dbt_utils.star(from=ref('stg_sql_server_dbo__events'), except=['_fivetran_deleted', 'event_type_id', 'date_load']) }},
+    et.name,
+    e.date_load
 FROM 
     {{ ref('stg_sql_server_dbo__events') }} e
-left union stg_event_types et
+left join stg_event_types et
 on e.event_type_id = et.event_type_id
 WHERE 
     _fivetran_deleted IS NULL
