@@ -10,14 +10,11 @@
 WITH src_orders AS (
     SELECT * 
     FROM {{ ref('base_sql_server_dbo__orders') }}
-    ),
-
-renamed_casted AS (
-    SELECT
-    {{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id,
-    {{ encrypt_field('shipping_service', key) }} as encrypted_name,
-    CURRENT_TIMESTAMP AS date_load
-    FROM src_orders
     )
 
-SELECT * FROM renamed_casted
+
+SELECT DISTINCT
+{{ dbt_utils.generate_surrogate_key(['SHIPPING_SERVICE']) }} as shipping_service_id,
+shipping_service as name,
+CURRENT_TIMESTAMP AS date_load
+FROM src_orders

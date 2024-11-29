@@ -11,7 +11,7 @@ WITH src_events AS (
     ),
 
 renamed_casted AS (
-    SELECT
+    SELECT DISTINCT
         {{ dbt_utils.generate_surrogate_key(['EVENT_TYPE']) }} as event_type_id,
         event_type as name,
         CURRENT_TIMESTAMP as date_load
